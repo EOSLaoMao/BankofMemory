@@ -7,7 +7,7 @@
 namespace bankofmemory {
    static const account_name code_account = N(bankofmemory);
    static const account_name tests_account = N(tests);
-   static const uint32_t board_len = 1024;
+   static const uint32_t board_len = 128;
 
 
    /**
