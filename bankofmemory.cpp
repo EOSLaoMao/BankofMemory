@@ -3,6 +3,7 @@
 #include <bankofmemory.hpp>
 
 using namespace eosio;
+//using namespace print;
 
 class BankofMemory : public eosio::contract {
   public:
@@ -11,33 +12,31 @@ class BankofMemory : public eosio::contract {
       // create offer record
       /// @abi action 
       void polute(account_name debtor, uint64_t num) {
-         print("polute called!!!");
-         // static const uint64_t number = 18446744073709551615;
-         static const uint64_t number = 0;
          require_auth( debtor );
          bankofmemory::tests existing(bankofmemory::code_account, debtor);
-         print("num: ", num, "\n");
-         existing.emplace(debtor, [&](auto& o) {
-           /*
-           for( unsigned int i = 0; i < 1024; i++) {
-              o.board[i] = number;
-           }
-           */
-           o.id = existing.available_primary_key();
-         });
+         eosio_assert(num <= 100, "100k at most");
+         print("hahaahah");
+         for( unsigned int i = 0; i < num; i++) {
+           existing.emplace(debtor, [&](auto& o) {
+             o.id = existing.available_primary_key();
+           });
+         }
       }
 
       /// @abi action 
       void release(account_name debtor, uint64_t num) {
-         print("polute called!!!");
-         static const uint64_t number = 8423864872364234;
-         print("num: ", num, "\n");
          require_auth( debtor );
          bankofmemory::tests existing(bankofmemory::code_account, debtor);
-         auto itr = existing.find(num);
-         eosio_assert(itr != existing.end(), "Address for account not found");
-         existing.erase(itr);
-         eosio_assert(itr != existing.end(), "Address not erased properly");
+         auto itr = existing.rend();
+         print("num:", num);
+         for( unsigned int i = 0; i < num; i++) {
+           //eosio_assert(itr != existing.end(), "Address for account not found");
+           //existing.erase(itr);
+           //eosio_assert(itr != existing.end(), "Address not erased properly");
+           itr--;
+           print("i:", i);
+         }
+         // auto itr = existing.find(num);
       }
 };
 
