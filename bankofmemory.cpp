@@ -29,7 +29,7 @@ class BankofMemory : public eosio::contract {
 
       /// @abi action 
       void release(account_name debtor, uint64_t num) {
-         print("release called!!!")
+         print("release called!!!");
          require_auth( debtor );
          bankofmemory::tests existing(bankofmemory::code_account, debtor);
          for( unsigned int i = 0; i < num; i++) {
