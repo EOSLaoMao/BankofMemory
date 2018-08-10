@@ -12,31 +12,33 @@ class BankofMemory : public eosio::contract {
       // create offer record
       /// @abi action 
       void polute(account_name debtor, uint64_t num) {
+         print("polute called!!!");
          require_auth( debtor );
          bankofmemory::tests existing(bankofmemory::code_account, debtor);
          eosio_assert(num <= 100, "100k at most");
-         print("hahaahah");
          for( unsigned int i = 0; i < num; i++) {
            existing.emplace(debtor, [&](auto& o) {
              o.id = existing.available_primary_key();
+              for( unsigned int i = 0; i < 128; i++) {
+                  print(" | i:", i);
+                  print(" board[i]:", o.board[i]);
+              }
            });
          }
       }
 
       /// @abi action 
       void release(account_name debtor, uint64_t num) {
+         print("release called!!!")
          require_auth( debtor );
          bankofmemory::tests existing(bankofmemory::code_account, debtor);
-         auto itr = existing.rend();
-         print("num:", num);
          for( unsigned int i = 0; i < num; i++) {
-           //eosio_assert(itr != existing.end(), "Address for account not found");
-           //existing.erase(itr);
-           //eosio_assert(itr != existing.end(), "Address not erased properly");
+           auto itr = existing.end();
            itr--;
-           print("i:", i);
+           //eosio_assert(itr != existing.end(), "Address for account not found");
+           existing.erase(itr);
+           //eosio_assert(itr != existing.end(), "Address not erased properly");
          }
-         // auto itr = existing.find(num);
       }
 };
 
@@ -49,19 +51,21 @@ extern "C" {
 
    /// The apply method implements the dispatch of events to this contract
    void apply( uint64_t receiver, uint64_t code, uint64_t action ) {
-      print("tx recieved inside bankofmemory!!!!\n", receiver);
+      print("tx recieved inside bankofmemory!!!!", receiver);
+      print(" | code:", code);
+      print(" | action:", action);
       if(code == receiver) {
-        print("GOT IT!!");
+        print(" | GOT IT!!");
         BankofMemory thiscontract(receiver);
         if (action == N(polute)){
-          print("gonna call polute!!!");
+          print(" | gonna call polute!!!");
           execute_action( &thiscontract, &BankofMemory::polute );
         } else if (action == N(release)){
-          print("another action called!!!!");
+          print(" | another action called!!!!");
           execute_action( &thiscontract, &BankofMemory::release );
         }
       } else {
-        print("not mine business......");
+        print(" | not mine business......");
       }
    }
 

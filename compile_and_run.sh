@@ -1,7 +1,7 @@
 #!/bin/bash
-IMAGE=johnnyzhao/eos:mainnet-1.0.7
+IMAGE=eoslaomao/eos:1.1.4
 # change it to your local ip
-HOST=192.168.1.34
+HOST=192.168.1.68
 
 NAME=bankofmemory
 
@@ -13,7 +13,10 @@ fi
 
 docker exec $NAME-eos-dev eosiocpp -o /$NAME/$NAME.wast /$NAME/$NAME.cpp
 echo ".................................build complete!"
-docker exec $NAME-eos-dev cleos -u http://$HOST:8888 --wallet-url http://$HOST:8900 set contract $NAME /$NAME/hello -p $NAME@active
-echo ".................................hello deployed!"
-docker exec $NAME-eos-dev cleos -u http://$HOST:8888 --wallet-url http://$HOST:8900 set contract $NAME /$NAME -p $NAME@active
-echo ".................................$NAME deployed!"
+
+docker cp ../bankofmemory nodeosd:/
+
+#docker exec $NAME-eos-dev cleos -u http://$HOST:8888 --wallet-url http://$HOST:8900 set contract $NAME /$NAME/hello -p $NAME@active
+#echo ".................................hello deployed!"
+#docker exec $NAME-eos-dev cleos -u http://$HOST:8888 --wallet-url http://$HOST:8900 set contract $NAME /$NAME -p $NAME@active
+#echo ".................................$NAME deployed!"
